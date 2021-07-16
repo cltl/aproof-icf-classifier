@@ -1,6 +1,2 @@
 transformers==4.3.3
 tokenizers==0.10.1
-tensorflow==2.4.1
-torch==1.8.0
-python==3.8.2
-cuda==11.2.1-1
