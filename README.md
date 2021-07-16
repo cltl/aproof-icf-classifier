@@ -28,4 +28,4 @@ You can also pull and run a Docker image from DockerHub:
 docker pull vucltl/va-proof-icf-classifier
 To run the image on an input file ./example/test.txt:
 
-docker run -v $(pwd)/example/:/wrk/ vucltl/va-proof-icf-classifier /wrk/test.csv > example/test.csv.out 2> example/te
+docker run -v vucltl/va-proof-icf-classifier example/test.csv > example/test-out.csv
