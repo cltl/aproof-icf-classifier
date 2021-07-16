@@ -1,8 +1,8 @@
-FROM python:3.8-slim-stretch
+FROM python:3.7-slim-stretch
 
-WORKDIR /a-proof-icf-classifier
+WORKDIR /aproof-icf-classifier
 
-COPY . /a-proof-icf-classifier
+COPY . /aproof-icf-classifier
 RUN pip install -r ./requirements.txt 
 
 
