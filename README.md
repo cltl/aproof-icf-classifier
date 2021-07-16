@@ -25,7 +25,8 @@ The classifier will read a CSV file row by and carry out the following actions:
 
 You can also pull and run a Docker image from DockerHub:
 
-docker pull vucltl/va-proof-icf-classifier
-To run the image on an input file ./example/test.txt:
+docker pull vucltl/aproof-icf-classifier
 
-docker run -v vucltl/va-proof-icf-classifier example/test.csv > example/test-out.csv
+To run the image on an input file ./example/test.csv:
+
+docker run -v vucltl/aproof-icf-classifier ./example/test.csv > ./example/test-out.csv
