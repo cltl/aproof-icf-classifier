@@ -6,4 +6,4 @@ COPY . /aproof-icf-classifier
 RUN pip install -r ./requirements.txt 
 
 
-ENTRYPOINT ["./src/apply/domain_classification.py]
+ENTRYPOINT ["./src/apply/main_classifify_icf.py]
