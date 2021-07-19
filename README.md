@@ -27,7 +27,4 @@ You can also pull and run a Docker image from DockerHub:
 
 docker pull piekvossen/a-proof-icf-classifier
 
-To run the image on an input file ./example/test.csv:
-
-docker volume create clinical-notes
-docker run -v clinical-notes:/etc/todo aproof-icf-classifier ./example/test.csv > ./example/test-out.csv
+This is a dummy repository. Run commands will be added soon.
