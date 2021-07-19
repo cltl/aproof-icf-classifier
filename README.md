@@ -25,8 +25,9 @@ The classifier will read a CSV file row by and carry out the following actions:
 
 You can also pull and run a Docker image from DockerHub:
 
-docker pull vucltl/aproof-icf-classifier
+docker pull piekvossen/a-proof-icf-classifier
 
 To run the image on an input file ./example/test.csv:
 
-docker run -v vucltl/aproof-icf-classifier ./example/test.csv > ./example/test-out.csv
+docker volume create clinical-notes
+docker run -v clinical-notes:/etc/todo aproof-icf-classifier ./example/test.csv > ./example/test-out.csv

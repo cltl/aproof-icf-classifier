@@ -10,14 +10,12 @@ If an ICF category and level is detected by the classifier, its value is stored 
 
 '''
 import pandas as pd
-import logging
-from simpletransformers.classification import ClassificationModel, ClassificationArgs
-from preprocessing import prepareDataNC
-from class_definitions import Annotation, BertContainer
-from utils import lightweightDataframe, completeDataframe, filterDataframe
-from eval_domain_agg import eval_per_domain
-from domain_classification import make_note_df, noteLabels
 
+import torch
+import simpletransformers
+import logging
+from sklearn.metrics import f1_score, accuracy_score, precision_recall_fscore_support, classification_report
+#from simpletransformers.classification import ClassificationModel, ClassificationArgs
 
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
@@ -26,50 +24,82 @@ transformers_logger.setLevel(logging.WARNING)
 def preprocess(note):
     return note.tolist()
 
-def predict(trained_model, path_to_csv, note_header):
+def predict(trained_model, path_to_csvfile):
     # load dataset
-    clinical_notes = pd.read_csv(path_to_csv, delimiter=';')
+    clinical_notes = pd.read_csv(path_to_csvfile, delimiter=';')
     for row in clinical_notes.rows:
-        note = row[note_header]
+        note = row["Notitietekst1"]
         if note:
             sentences = preprocess(note)
             predictions = trained_model.predict(sentences)
-    
-            # select relevant columns
-            clinical_note_output = clinical_notes[['sentence', 'label']]
 
-            # turn classes into numerical classes
-            clinical_note_output.loc[test_df['label'] == 'None', 'label'] = 0
-            clinical_note_output.loc[test_df['label'] == '.D450: Lopen en zich verplaatsen', 'label'] = 1
-            clinical_note_output.loc[test_df['label'] == '.B152: Stemming', 'label'] = 2
-            clinical_note_output.loc[test_df['label'] == '.B455: Inspanningstolerantie', 'label'] = 3
-            clinical_note_output.loc[test_df['label'] == '.D840-859: Beroep en werk', 'label'] = 4
-
-            # rename columns so simpletransformers recognises them
-            clinical_note_output.columns = ['text', 'labels']
-
-            clinical_note_output['predictions'] = predictions
         else:
             print("error note header could not be matched:", note_header)
             print(clinical_notes.info())
-            
-    return (clinical_note_output)
 
 
+def test_read_write_csv (path_to_csvfile):
+    # input header
+    # BSN;Notitie ID;NotitieCSN;Typenotitie;Notitiedatum;Zorgverlenernaam;zorgverlener specialismecode;zorgverlenertype;Notitietekst1
+    bsn = "BSN"
+    note_id = "Notitie ID"
+    note_text = "Notitietekst1"
+    date = "Notitiedatum"
 
-def main(modeltype, path_to_model, path_to_csvfile, note_header):
+    #output header
+    # BSN;NotitieID;datum;FAC;ADM;ATT;BER;ENR;ETN;INS;MBW;disregard;target
+    clinical_notes_input = pd.read_csv(path_to_csvfile, delimiter=';', encoding_errors='ignore')
+    print(clinical_notes_input.info())
+    print(clinical_notes_input.head())
+
+    output_columns = ["BSN", "NotitieID", "datum", "FAC", "ADM", "ATT", "BER", "ENR", "ETN", "INS", "MBW", "disregard", "target"]
+    clinical_notes_output = pd.DataFrame(columns=output_columns)
+
+    for index, row in clinical_notes_input.iterrows():
+        row_note_text = row[note_text]
+        print(row_note_text)
+
+        row_bsn = row[bsn]
+        row_note_id = row[note_id]
+        row_date = row[date]
+        new_row = create_result_row(row_bsn, row_note_id, row_date)
+        clinical_notes_output = clinical_notes_output.append(new_row, ignore_index=True)
+        
+    clinical_notes_output.to_csv(path_to_csvfile+"out.csv")
+
+def create_result_row(row_bsn, row_note_id, row_date):
+    row_fac = "FAC0-4"
+    row_adm = "ADM0-3"
+    row_att = "ATT0-3"
+    row_ber = "BER0-3"
+    row_enr = "ENR0-3"
+    row_etn = "ETN0-3"
+    row_ins = "INS0-3"
+    row_mbw = "MBW0-3"
+    row_disregard = "false"
+    row_target = ""
+
+    new_row = {"BSN": row_bsn, "NotitieID": row_note_id, "datum" : row_date,
+               "FAC": row_fac, "ADM": row_adm, "ATT" : row_att, "BER": row_ber, "ENR" : row_enr, "ETN" : row_etn, "INS" : row_ins, "MBW" : row_mbw,
+               "disregard" : row_disregard, "target" : row_target}
+    return new_row
+
+
+def main(modeltype, path_to_model, path_to_csvfile):
     print("Initialize model...")
 
 
-    classification_model = ClassificationModel(modeltype, path_to_model, note_header, use_cuda=False)
-    clinical_note_output = predict(classification_model, path_to_csvfile)
-    clinical_note_output
+    #classification_model = ClassificationModel(modeltype, path_to_model, use_cuda=False)
+    #clinical_note_output = predict(classification_model, path_to_csvfile)
 
+    test_read_write_csv (path_to_csvfile)
 
-modeltype = sys.argv[1]
-path_to_model = sys.argv[2]
-path_to_csvfile = sys.argv[3]
-note_header = sys.argv[4]
+#modeltype = sys.argv[1]
+#path_to_model = sys.argv[2]
+#path_to_csvfile = sys.argv[3]
 
 if __name__ == "__main__":
-    main(modeltype, path_to_model, path_to_csvfile, note_header)
+    modeltype = "roberta"
+    path_to_model = "/Users/piek/PycharmProjects/aproof-icf-classifier/models/roberta_scratch_icf"
+    path_to_csvfile = "/Users/piek/PycharmProjects/aproof-icf-classifier/example/ZorgTTP_in.csv"
+    main(modeltype, path_to_model, path_to_csvfile)
