@@ -94,12 +94,12 @@ def main(modeltype, path_to_model, path_to_csvfile):
 
     test_read_write_csv (path_to_csvfile)
 
-#modeltype = sys.argv[1]
-#path_to_model = sys.argv[2]
-#path_to_csvfile = sys.argv[3]
+modeltype = sys.argv[1]
+path_to_model = sys.argv[2]
+path_to_csvfile = sys.argv[3]
 
 if __name__ == "__main__":
-    modeltype = "roberta"
-    path_to_model = "../models/roberta_scratch_icf"
-    path_to_csvfile = "../example/ZorgTTP_in.csv"
+    #modeltype = "roberta"
+    #path_to_model = "../models/roberta_scratch_icf"
+    #path_to_csvfile = "../example/ZorgTTP_in.csv"
     main(modeltype, path_to_model, path_to_csvfile)
