@@ -100,6 +100,6 @@ def main(modeltype, path_to_model, path_to_csvfile):
 
 if __name__ == "__main__":
     modeltype = "roberta"
-    path_to_model = "/Users/piek/PycharmProjects/aproof-icf-classifier/models/roberta_scratch_icf"
-    path_to_csvfile = "/Users/piek/PycharmProjects/aproof-icf-classifier/example/ZorgTTP_in.csv"
+    path_to_model = "../models/roberta_scratch_icf"
+    path_to_csvfile = "../example/ZorgTTP_in.csv"
     main(modeltype, path_to_model, path_to_csvfile)
