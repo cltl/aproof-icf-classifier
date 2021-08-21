@@ -1,9 +1,8 @@
-FROM python:3.7-slim-stretch
+FROM python:3.7-slim
 
-WORKDIR /aproof-icf-classifier
+WORKDIR /icfc
 
-COPY . /aproof-icf-classifier
-RUN pip install -r ./requirements.txt 
+COPY . .
+RUN pip install docker-entrypoint && pip install -r ./requirements.txt 
 
-
-ENTRYPOINT ["./src/apply/main_classify_icf.py"]
+ENTRYPOINT ["python", "./src/apply/main_classify_icf.py"]

@@ -10,11 +10,11 @@ If an ICF category and level is detected by the classifier, its value is stored 
 
 '''
 import pandas as pd
-
+import sys
 import torch
 import simpletransformers
 import logging
-from sklearn.metrics import f1_score, accuracy_score, precision_recall_fscore_support, classification_report
+# from sklearn.metrics import f1_score, accuracy_score, precision_recall_fscore_support, classification_report
 #from simpletransformers.classification import ClassificationModel, ClassificationArgs
 
 logging.basicConfig(level=logging.INFO)
@@ -94,12 +94,12 @@ def main(modeltype, path_to_model, path_to_csvfile):
 
     test_read_write_csv (path_to_csvfile)
 
-modeltype = sys.argv[1]
-path_to_model = sys.argv[2]
-path_to_csvfile = sys.argv[3]
 
 if __name__ == "__main__":
     #modeltype = "roberta"
     #path_to_model = "../models/roberta_scratch_icf"
     #path_to_csvfile = "../example/ZorgTTP_in.csv"
+    modeltype = sys.argv[1]
+    path_to_model = sys.argv[2]
+    path_to_csvfile = sys.argv[3]
     main(modeltype, path_to_model, path_to_csvfile)
