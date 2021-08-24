@@ -29,6 +29,6 @@ docker pull piekvossen/a-proof-icf-classifier
 
 This is a dummy repository. To run the docker:
 
-> docker run icfc roberta dummy_path_to_models <path to a csv input file>
+> docker run a-proof-icf-classifier roberta dummy_path_to_models <path to a csv input file>
 
 An example of the input CSV file is given in the example folder. The output is saved in the same folder as csv file.
