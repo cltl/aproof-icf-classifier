@@ -1,0 +1,12 @@
+BSN;Notitie ID;NotitieCSN;Typenotitie;Notitiedatum;Zorgverlenernaam;zorgverlener specialismecode;zorgverlenertype;note_text
+BSN;485921939;494106770;NULL;2021-01-15;naam;naam;NULL;text
+BSN;489310106;497606989;Telefonisch contact;2021-01-28;naam;naam;313;text
+BSN;502428530;511186148;Voortgangsverslag;2021-03-22;naam;naam;313;text
+BSN;498947456;507576600;NULL;2021-03-08;naam;naam;NULL;text
+BSN;487519955;495756725;Voortgangsverslag;2021-01-21;naam;naam;362;text
+BSN;500655219;509360448;Brief;2021-03-15;naam;naam;NULL;text
+BSN;485930107;494115413;Voortgangsverslag;2021-01-15;naam;naam;330;text
+BSN;486008537;494201423;Zorgplan/VPK rapportage;2021-01-15;naam;naam;9100;text
+BSN;486586948;494832918;Consulten;2021-01-18;naam;naam;313;text
+BSN;486645539;494858456;Zorgplan/VPK rapportage;2021-01-18;naam;naam;9100;text
+BSN;486989619;495211572;Voortgangsverslag;2021-01-19;naam;naam;330;text

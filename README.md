@@ -1,7 +1,7 @@
 # aproof-icf-classifier
-Classifier that can read medical reports and assign a functional level classification following the WHO ICF classification scheme.
+This a dummy repository for the A-proof ICF classifier: a classifier that can read medical reports and assign a functional level classification following the WHO ICF classification scheme.
 
-The classifier will read a CSV file row by and carry out the following actions:
+The final classifier will read a CSV file row by and carry out the following actions:
 
 <ol>
 <li>load the ICF classifiers in memory
@@ -18,8 +18,37 @@ The classifier will read a CSV file row by and carry out the following actions:
 <li>aggregate the domains and levels across all sentences and obtain a domain level output at the note level
 <li>save the note level levels in additional columns and save the row to the output file
 </ol>
-  </ol>
+</ol>
 
+# Run parameters:
+<ul>
+<li> argv[1] = name of the transformer model, e.g. "roberta"
+<li>argv[2] = path to the model folder
+<li>argv[3] = path to the inoput CSV file (";" separated)
+<li>argv[4] = the name of the column that has the text
+</ul>
+
+python apply/main_classify.py roberta <path-to-the-model-folder> <path-to-the-csv-input-file> <name-of-the-text-column>
+# Input
+
+A locally stored CSV file (";" separated) with at least a column for the text field.
+
+# Output
+
+A locally saved CSV file (";" separated) with each row extended with the following columns ofr ICF categories:
+
+<ul>
+<li>"FAC": ICF D450 Level of walking 
+<li>"ADM": ICF B440 level of respiration 
+<li>"ATT": ICF B140 level of attending
+<li>"BER": ICF D840-D859 level of working and social functioning 
+<li>"ENR": ICF B1300 level of energy
+<li>"ETN": ICF D550 capacity to eat and drink
+<li>"INS": ICF B455 capacity to use force
+<li>"MBW": ICF B152 level of mood
+<li>"disregard" :  the text should be disregarded
+<li>"target" : the text targets another time period
+</ul>
 
 # Docker
 
@@ -29,6 +58,10 @@ docker pull piekvossen/a-proof-icf-classifier
 
 This is a dummy repository. To run the docker:
 
-> docker run a-proof-icf-classifier roberta dummy_path_to_models <path to a csv input file>
+> docker run a-proof-icf-classifier roberta dummy_path_to_models <path to a csv input file> <name of the text column>
 
 An example of the input CSV file is given in the example folder. The output is saved in the same folder as csv file.
+
+#TODO
+ The current code only reads the CSV and adds the columns with dummy level. This will be soon replaced by the real model.
+ 

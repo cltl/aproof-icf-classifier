@@ -24,11 +24,11 @@ transformers_logger.setLevel(logging.WARNING)
 def preprocess(note):
     return note.tolist()
 
-def predict(trained_model, path_to_csvfile):
+def predict(trained_model, path_to_csvfile, text_column_name):
     # load dataset
     clinical_notes = pd.read_csv(path_to_csvfile, delimiter=';')
     for row in clinical_notes.rows:
-        note = row["Notitietekst1"]
+        note = row[text_column_name]
         if note:
             sentences = preprocess(note)
             predictions = trained_model.predict(sentences)
@@ -38,12 +38,11 @@ def predict(trained_model, path_to_csvfile):
             print(clinical_notes.info())
 
 
-def test_read_write_csv (path_to_csvfile):
+def test_read_write_csv (path_to_csvfile, text_column_name):
     # input header
     # BSN;Notitie ID;NotitieCSN;Typenotitie;Notitiedatum;Zorgverlenernaam;zorgverlener specialismecode;zorgverlenertype;Notitietekst1
     bsn = "BSN"
     note_id = "Notitie ID"
-    note_text = "Notitietekst1"
     date = "Notitiedatum"
 
     #output header
@@ -56,7 +55,7 @@ def test_read_write_csv (path_to_csvfile):
     clinical_notes_output = pd.DataFrame(columns=output_columns)
 
     for index, row in clinical_notes_input.iterrows():
-        row_note_text = row[note_text]
+        row_note_text = row[text_column_name]
         print(row_note_text)
 
         row_bsn = row[bsn]
@@ -85,21 +84,22 @@ def create_result_row(row_bsn, row_note_id, row_date):
     return new_row
 
 
-def main(modeltype, path_to_model, path_to_csvfile):
+def main(modeltype, path_to_model, path_to_csvfile, text_column_name):
     print("Initialize model...")
 
 
     #classification_model = ClassificationModel(modeltype, path_to_model, use_cuda=False)
     #clinical_note_output = predict(classification_model, path_to_csvfile)
 
-    test_read_write_csv (path_to_csvfile)
+    test_read_write_csv (path_to_csvfile, text_column_name)
 
 
 if __name__ == "__main__":
     #modeltype = "roberta"
     #path_to_model = "../models/roberta_scratch_icf"
-    #path_to_csvfile = "../example/ZorgTTP_in.csv"
+    #path_to_csvfile = "../example/input_csv.csv"
     modeltype = sys.argv[1]
     path_to_model = sys.argv[2]
     path_to_csvfile = sys.argv[3]
-    main(modeltype, path_to_model, path_to_csvfile)
+    text_column_name = sys.argv[4]
+    main(modeltype, path_to_model, path_to_csvfile, text_column_name)
