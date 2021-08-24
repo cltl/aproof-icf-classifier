@@ -58,9 +58,9 @@ docker pull piekvossen/a-proof-icf-classifier
 
 This is a dummy repository. To run the docker:
 
-> docker run a-proof-icf-classifier roberta dummy_path_to_models <path to a csv input file> <name of the text column>
+> docker run a-proof-icf-classifier roberta dummy_path_to_models path-to-a-csv-input-file name-of-the-text-column
 
-An example of the input CSV file is given in the example folder. The output is saved in the same folder as csv file.
+An example of the input CSV file is given in the example folder. The text column is named "note_text". The output is saved in the same folder as csv file.
 
 #TODO
  The current code only reads the CSV and adds the columns with dummy level. This will be soon replaced by the real model.
