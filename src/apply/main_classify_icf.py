@@ -9,6 +9,7 @@ If an ICF category and level is detected by the classifier, its value is stored 
 
 
 '''
+import os
 import pandas as pd
 import sys
 import torch
@@ -102,4 +103,7 @@ if __name__ == "__main__":
     path_to_model = sys.argv[2]
     path_to_csvfile = sys.argv[3]
     text_column_name = sys.argv[4]
-    main(modeltype, path_to_model, path_to_csvfile, text_column_name)
+    if (os.path.exists(path_to_csvfile)):
+        main(modeltype, path_to_model, path_to_csvfile, text_column_name)
+    else:
+        print('Cannot find the input CSV file at:', path_to_csvfile)
