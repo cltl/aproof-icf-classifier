@@ -12,11 +12,8 @@ If an ICF category and level is detected by the classifier, its value is stored 
 import os
 import pandas as pd
 import sys
-import torch
-import simpletransformers
 import logging
-# from sklearn.metrics import f1_score, accuracy_score, precision_recall_fscore_support, classification_report
-#from simpletransformers.classification import ClassificationModel, ClassificationArgs
+from src import icf
 
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
@@ -40,55 +37,32 @@ def predict(trained_model, path_to_csvfile, text_column_name):
 
 
 def test_read_write_csv (path_to_csvfile, text_column_name):
-    # input header
-    # BSN;Notitie ID;NotitieCSN;Typenotitie;Notitiedatum;Zorgverlenernaam;zorgverlener specialismecode;zorgverlenertype;Notitietekst1
-    bsn = "BSN"
-    note_id = "Notitie ID"
-    date = "Notitiedatum"
 
-    #output header
-    # BSN;NotitieID;datum;FAC;ADM;ATT;BER;ENR;ETN;INS;MBW;disregard;target
-    clinical_notes_input = pd.read_csv(path_to_csvfile, delimiter=';', encoding_errors='ignore')
-    print(clinical_notes_input.info())
-    print(clinical_notes_input.head())
+#    clinical_notes_input = pd.read_csv(path_to_csvfile, delimiter=';', encoding_errors='ignore')
+    clinical_notes_input = pd.read_csv(path_to_csvfile, delimiter=';')
 
-    output_columns = ["BSN", "NotitieID", "datum", "FAC", "ADM", "ATT", "BER", "ENR", "ETN", "INS", "MBW", "disregard", "target"]
-    clinical_notes_output = pd.DataFrame(columns=output_columns)
+    clinical_notes_input[icf.output_columns] = ""
 
     for index, row in clinical_notes_input.iterrows():
         row_note_text = row[text_column_name]
-        print(row_note_text)
+        icf_levels = add_result_to_row(row_note_text)
+        for domain in icf_levels:
+            clinical_notes_input.at[index,domain] = icf_levels[domain]
 
-        row_bsn = row[bsn]
-        row_note_id = row[note_id]
-        row_date = row[date]
-        new_row = create_result_row(row_bsn, row_note_id, row_date)
-        clinical_notes_output = clinical_notes_output.append(new_row, ignore_index=True)
-        
-    clinical_notes_output.to_csv(path_to_csvfile+"out.csv")
+    print(clinical_notes_input.info())
+    print(clinical_notes_input.head(10))
+    clinical_notes_input.to_csv(path_to_csvfile+"out.csv")
 
-def create_result_row(row_bsn, row_note_id, row_date):
-    row_fac = "FAC0-4"
-    row_adm = "ADM0-3"
-    row_att = "ATT0-3"
-    row_ber = "BER0-3"
-    row_enr = "ENR0-3"
-    row_etn = "ETN0-3"
-    row_ins = "INS0-3"
-    row_mbw = "MBW0-3"
-    row_disregard = "false"
-    row_target = ""
-
-    new_row = {"BSN": row_bsn, "NotitieID": row_note_id, "datum" : row_date,
-               "FAC": row_fac, "ADM": row_adm, "ATT" : row_att, "BER": row_ber, "ENR" : row_enr, "ETN" : row_etn, "INS" : row_ins, "MBW" : row_mbw,
-               "disregard" : row_disregard, "target" : row_target}
-    return new_row
+def add_result_to_row(row_note_text):
+    print(row_note_text)
+    icf_levels = {}
+    for index in range(len(icf.output_columns)):
+        icf_levels[icf.output_columns[index]] = icf.output_values[index]
+    return icf_levels
 
 
 def main(modeltype, path_to_model, path_to_csvfile, text_column_name):
     print("Initialize model...")
-
-
     #classification_model = ClassificationModel(modeltype, path_to_model, use_cuda=False)
     #clinical_note_output = predict(classification_model, path_to_csvfile)
 
