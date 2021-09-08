@@ -9,11 +9,13 @@ If an ICF category and level is detected by the classifier, its value is stored 
 
 
 '''
-import os
-import pandas as pd
-import sys
 import logging
-from src import icf
+import os
+import sys
+
+import pandas as pd
+
+import icf_levels as icf
 
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
