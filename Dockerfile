@@ -1,8 +1,9 @@
-FROM python:3.7-slim
+FROM python:3.8
 
 WORKDIR /icfc
 
 COPY . .
-RUN pip install docker-entrypoint && pip install -r ./requirements.txt 
 
-ENTRYPOINT ["python", "./src/apply/main_classify_icf.py"]
+RUN pip install docker-entrypoint && pip install -r ./requirements.txt && python -m spacy download nl_core_news_lg
+
+ENTRYPOINT ["python", "./main.py"]
