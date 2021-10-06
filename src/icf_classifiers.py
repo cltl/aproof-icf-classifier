@@ -28,7 +28,7 @@ def predict_domains(
     model_type: str
         type of the pre-trained model, e.g. bert, roberta, electra
     model_name: {str, Path}
-        path to a directory containing model file
+        path to a local directory with model file or model name on Hugging Face
 
     Returns
     -------
@@ -45,6 +45,7 @@ def predict_domains(
         warnings.warn('CUDA device not available; running on a CPU!')
 
     # load model
+    print(f'Downloading the model from https://huggingface.co/{model_name}')
     model = MultiLabelClassificationModel(
         model_type,
         model_name,
@@ -71,7 +72,7 @@ def predict_levels(
     model_type: str
         type of the pre-trained model, e.g. bert, roberta, electra
     model_name: {str, Path}
-        path to a directory containing model file
+        path to a local directory with model file or model name on Hugging Face
 
     Returns
     -------
@@ -92,6 +93,7 @@ def predict_levels(
         warnings.warn('CUDA device not available; running on a CPU!')
 
     # load model
+    print(f'Downloading the model from https://huggingface.co/{model_name}')
     model = ClassificationModel(
         model_type,
         model_name,

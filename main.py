@@ -27,8 +27,6 @@ from src.icf_classifiers import predict_domains, predict_levels
 def add_level_predictions(
     sents,
     domains,
-    models_dir,
-    model_type,
 ):
     """
     For each domain, select the sentences in `sents` that were predicted as discussing this domain. Apply the relevant levels regression model to get level predictions and join them back to `sents`.
@@ -39,10 +37,6 @@ def add_level_predictions(
         df with sentences and `predictions` of the domains classifier
     domains: list
         list of all the domains, in the order in which they appear in the multi-label
-    models_dir: str
-        path to the directory containing the levels models
-    model_type: str
-        type of the pre-trained model, e.g. bert, roberta, electra
 
     Returns
     -------
@@ -56,8 +50,8 @@ def add_level_predictions(
             print(f'There are no sentences for which {dom} was predicted.')
         else:
             print(f'Generating levels predictions for {dom}.')
-        lvl_model = models_dir / f'levels_{dom.lower()}_sents'
-        predictions = predict_levels(results['text'], model_type, lvl_model).rename(f"{dom}_lvl")
+        lvl_model = f'CLTL/icf-levels-{dom.lower()}'
+        predictions = predict_levels(results['text'], 'roberta', lvl_model).rename(f"{dom}_lvl")
         sents = sents.join(predictions)
     return sents
 
@@ -65,9 +59,6 @@ def add_level_predictions(
 def main(
     in_csv,
     text_col,
-    model_type,
-    models_dir,
-    dom_model_name,
 ):
     """
     Read the `in_csv` file, process the text by row (anonymize, split to sentences), predict domains and levels per sentence, aggregate the results back to note-level, write the results to the output file.
@@ -78,12 +69,6 @@ def main(
         path to csv file with the text to process; the csv must follow the following specs: sep=';', quotechar='"', encoding='utf-8', first row is the header
     text_col: str
         name of the column containing the text
-    model_type: str
-        type of the pre-trained model, e.g. bert, roberta, electra
-    models_dir: str
-        path to the directory containing the domains model and the levels models
-    dom_model_name: str
-        name of the domains model
 
     Returns
     -------
@@ -93,23 +78,10 @@ def main(
     domains=['ADM', 'ATT', 'BER', 'ENR', 'ETN', 'FAC', 'INS', 'MBW', 'STM']
     levels = [f"{domain}_lvl" for domain in domains]
 
-    # check all paths
+    # check path
     in_csv = Path(in_csv)
-    models_dir = Path(models_dir)
-    dom_model = models_dir / dom_model_name
-
     msg = f'The csv file cannot be found in this location: "{in_csv}"'
     assert in_csv.exists(), msg
-
-    msg = f'The domains model {dom_model_name} cannot be found in this location: "{models_dir}"'
-    assert dom_model.exists(), msg
-
-    msg = f'The folder "{dom_model}" does not contain a model file (pytorch_model.bin)'
-    assert (dom_model / 'pytorch_model.bin').exists(), msg
-
-    msg = f'The level models cannot be found in this location: "{models_dir}"'
-    modname = lambda dom: f'levels_{dom.lower()}_sents'
-    assert all([(models_dir / modname(dom)).exists() for dom in domains]), msg
 
     # read csv
     print(f'Loading input csv file: {in_csv}')
@@ -141,11 +113,15 @@ def main(
 
     # predict domains
     print('Generating domains predictions. This might take a while.')
-    sents['predictions'] = predict_domains(sents['text'], model_type, dom_model)
+    sents['predictions'] = predict_domains(
+        sents['text'],
+        'roberta',
+        'CLTL/icf-domains',
+    )
 
     # predict levels
     print('Processing domains predictions.')
-    sents = add_level_predictions(sents, domains, models_dir, model_type)
+    sents = add_level_predictions(sents, domains)
 
     # aggregate to note-level
     note_predictions = sents.groupby('note_index')[levels].mean()
@@ -167,15 +143,9 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--in_csv', default='./example/input.csv')
     argparser.add_argument('--text_col', default='text')
-    argparser.add_argument('--model_type', default='roberta')
-    argparser.add_argument('--models_dir', default='../models')
-    argparser.add_argument('--dom_model_name', default='domains_eb_ap_mod1')
     args = argparser.parse_args()
 
     main(
         args.in_csv,
         args.text_col,
-        args.model_type,
-        args.models_dir,
-        args.dom_model_name,
     )
