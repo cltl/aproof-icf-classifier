@@ -66,11 +66,8 @@ $ docker pull piekvossen/a-proof-icf-classifier
 3. Run the pipeline with the `docker run` command. You need to pass the following arguments:
 - `--in_csv`: path to the input csv file
 - `--text_col`: name of the text column in the csv
-- `--model_type`: type of the language model, e.g. bert, roberta, electra (use 'roberta', unless instructed otherwise)
-- `--models_dir`: path to the folder that contains all 10 models (1 domains model, 9 levels models)
-- `--dom_model_name`: name of the domains model (use 'domains', unless instructed otherwise)
 
 For example -
 ```
-$ docker run piekvossen/a-proof-icf-classifier --in_csv myfile.csv --text_col notitie_tekst --model_type roberta --models_dir Downloads/models --dom_model_name domains
+$ docker run piekvossen/a-proof-icf-classifier --in_csv myfile.csv --text_col notitie_tekst
 ```
