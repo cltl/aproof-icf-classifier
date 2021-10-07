@@ -4,9 +4,6 @@ The script generates predictions of the level of functioning that is described i
 The script can be customized with the following parameters:
     --in_csv: path to input csv file
     --text_col: name of the column containing the text
-    --model_type: type of the pre-trained language model
-    --models_dir: path to the directory containing all the models (domains, levels)
-    --dom_model_name: name of the domains model
 
 To change the default values of a parameter, pass it in the command line, e.g.:
 
