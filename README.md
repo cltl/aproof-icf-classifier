@@ -69,5 +69,11 @@ $ docker pull piekvossen/a-proof-icf-classifier
 
 For example -
 ```
-$ docker run piekvossen/a-proof-icf-classifier --in_csv myfile.csv --text_col notitie_tekst
+$ docker run piekvossen/a-proof-icf-classifier --in_csv .example/input.csv --text_col text
 ```
+
+Running the docker for the first time, will download the models from huggingface:
+
+https://huggingface.co/CLTL
+
+In total, 10 tranformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used.
