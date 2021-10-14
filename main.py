@@ -56,6 +56,7 @@ def add_level_predictions(
 def main(
     in_csv,
     text_col,
+    encoding
 ):
     """
     Read the `in_csv` file, process the text by row (anonymize, split to sentences), predict domains and levels per sentence, aggregate the results back to note-level, write the results to the output file.
@@ -88,7 +89,7 @@ def main(
             sep=';',
             header=0,
             quotechar='"',
-            encoding='utf-8',
+            encoding=encoding,
             low_memory=False,
         )
         print(f'Input csv file ({in_csv}) is successfuly loaded!')
@@ -98,18 +99,25 @@ def main(
     if len(df) > 3000:
         warnings.warn('The csv file contains more than 3,000 rows. This is not recommended since it might cause problems when generating predictions; consider splitting to several smaller files.')
 
+    # remove rows containing NA values in text column
+    if df[text_col].isna().sum() > 0:
+        print(f'Number of rows in input data: {df.shape[0]}')
+        print(f'Rows containing NA in text column: {df[text_col].isna().sum()}')
+        df.dropna(axis=0, subset=[text_col], inplace=True)
+        print(f'Rows after dropping NA values: {df.shape[0]}')
+
     # anonymize
-    print(f'Anonymizing the text in "{text_col}" column. This might take a while.')
+    print(f'Anonymizing the text in "{text_col}" column. This might take a while.', flush=True)
     nlp = spacy.load('nl_core_news_lg')
     anonym_notes = df[text_col].apply(lambda i: anonymize(i, nlp)).rename('anonym_text')
 
     # split to sentences
-    print(f'Splitting the text in "{text_col}" column to sentences. This might take a while.')
+    print(f'Splitting the text in "{text_col}" column to sentences. This might take a while.', flush=True)
     to_sentence = lambda txt: [str(sent) for sent in list(nlp(txt).sents)]
     sents = anonym_notes.apply(to_sentence).explode().rename('text').reset_index().rename(columns={'index': 'note_index'})
 
     # predict domains
-    print('Generating domains predictions. This might take a while.')
+    print('Generating domains predictions. This might take a while.', flush=True)
     sents['predictions'] = predict_domains(
         sents['text'],
         'roberta',
@@ -117,7 +125,7 @@ def main(
     )
 
     # predict levels
-    print('Processing domains predictions.')
+    print('Processing domains predictions.', flush=True)
     sents = add_level_predictions(sents, domains)
 
     # aggregate to note-level
@@ -140,9 +148,11 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--in_csv', default='./example/input.csv')
     argparser.add_argument('--text_col', default='text')
+    argparser.add_argument('--encoding', default='utf-8')
     args = argparser.parse_args()
 
     main(
         args.in_csv,
         args.text_col,
+        args.encoding
     )

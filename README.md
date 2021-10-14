@@ -66,6 +66,7 @@ $ docker pull piekvossen/a-proof-icf-classifier
 3. Run the pipeline with the `docker run` command. You need to pass the following arguments:
 - `--in_csv`: path to the input csv file
 - `--text_col`: name of the text column in the csv
+- `--encoding` (optional): use if input csv is not utf-8
 
 For example -
 ```
