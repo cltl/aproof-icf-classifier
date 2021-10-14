@@ -76,4 +76,16 @@ Running the docker for the first time, will download the models from huggingface
 
 https://huggingface.co/CLTL
 
-In total, 10 tranformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used.
+In total, 10 transformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used. 
+
+# Cached models
+To save the cached models on the local file system, or use them in a different container in a follow-up run, mount the Huggingface cache dir to a local directory. For example:
+```bash
+docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+```
+
+To use the cached models in an environment without internet connection, set `TRANSFORMERS_OFFLINE=1` as environment variable (see [Huggingface documentation](https://huggingface.co/transformers/installation.html#offline-mode)). For example:
+
+```bash
+docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ -e TRANSFORMERS_OFFLINE=1 piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+```
