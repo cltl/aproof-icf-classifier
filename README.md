@@ -6,6 +6,7 @@ a-proof-icf-classifier
 3. [Output File](#output-file)
 4. [Machine Learning Pipeline](#machine-learning-pipeline)
 5. [How to use?](#how-to-use)
+6. [Cached models](#cached-models)
 
 # Description
 This repository contains a machine learning pipeline that reads a clinical note in Dutch and assigns the functioning level of the patient based on the textual description.
@@ -60,8 +61,8 @@ The pipeline includes the following steps:
 # How to use?
 1. Install Docker: see [here](https://docs.docker.com/desktop/windows/install/) for Windows and [here](https://docs.docker.com/desktop/mac/install/) for macOS.
 2. Pull the docker image from [DockerHub](https://hub.docker.com/r/piekvossen/a-proof-icf-classifier) by typing in your command line:
-```
-$ docker pull piekvossen/a-proof-icf-classifier
+```bash
+docker pull piekvossen/a-proof-icf-classifier
 ```
 3. Run the pipeline with the `docker run` command. You need to pass the following arguments:
 - `--in_csv`: path to the input csv file
@@ -69,15 +70,15 @@ $ docker pull piekvossen/a-proof-icf-classifier
 - `--encoding` (optional): use if input csv is not utf-8
 
 For example -
-```
-$ docker run piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+```bash
+docker run piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
 ```
 
-Running the docker for the first time, will download the models from huggingface:
+Running the docker for the first time will download the models from huggingface:
 
 https://huggingface.co/CLTL
 
-In total, 10 transformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used. 
+In total, 10 transformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used.
 
 # Cached models
 To save the cached models on the local file system, or use them in a different container in a follow-up run, mount the Huggingface cache dir to a local directory. For example:
