@@ -66,14 +66,27 @@ $ docker pull piekvossen/a-proof-icf-classifier
 3. Run the pipeline with the `docker run` command. You need to pass the following arguments:
 - `--in_csv`: path to the input csv file
 - `--text_col`: name of the text column in the csv
+- `--encoding` (optional): use if input csv is not utf-8
 
 For example -
 ```
-$ docker run piekvossen/a-proof-icf-classifier --in_csv .example/input.csv --text_col text
+$ docker run piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
 ```
 
 Running the docker for the first time, will download the models from huggingface:
 
 https://huggingface.co/CLTL
 
-In total, 10 tranformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used.
+In total, 10 transformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used. 
+
+# Cached models
+To save the cached models on the local file system, or use them in a different container in a follow-up run, mount the Huggingface cache dir to a local directory. For example:
+```bash
+docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+```
+
+To use the cached models in an environment without internet connection, set `TRANSFORMERS_OFFLINE=1` as environment variable (see [Huggingface documentation](https://huggingface.co/transformers/installation.html#offline-mode)). For example:
+
+```bash
+docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ -e TRANSFORMERS_OFFLINE=1 piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+```
