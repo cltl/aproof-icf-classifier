@@ -69,7 +69,7 @@ $ docker pull piekvossen/a-proof-icf-classifier
 
 For example -
 ```
-$ docker run piekvossen/a-proof-icf-classifier --in_csv .example/input.csv --text_col text
+$ docker run piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
 ```
 
 Running the docker for the first time, will download the models from huggingface:
