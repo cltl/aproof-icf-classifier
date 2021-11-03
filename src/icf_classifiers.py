@@ -7,6 +7,7 @@ Functions for generating predictions:
 """
 
 
+import numpy as np
 import pandas as pd
 import torch
 import warnings
@@ -102,5 +103,6 @@ def predict_levels(
     )
 
     # predict
-    predictions, _ = model.predict(to_predict)
+    _, raw_outputs = model.predict(to_predict)
+    predictions = np.squeeze(raw_outputs)
     return pd.Series(predictions, index=text.index)
