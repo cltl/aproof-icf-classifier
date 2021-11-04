@@ -59,26 +59,28 @@ The pipeline includes the following steps:
 ![ml_pipe drawio](https://user-images.githubusercontent.com/38586487/134154846-32c38fe2-e9c9-4831-962c-c180b39e6928.png)
 
 # How to use?
-1. Install Docker: see [here](https://docs.docker.com/desktop/windows/install/) for Windows and [here](https://docs.docker.com/desktop/mac/install/) for macOS.
+## Step 1: Setting up Docker
+1. Install Docker Desktop: see [here](https://docs.docker.com/desktop/windows/install/) for Windows and [here](https://docs.docker.com/desktop/mac/install/) for macOS.
 2. Pull the docker image from [DockerHub](https://hub.docker.com/r/piekvossen/a-proof-icf-classifier) by typing in your command line:
 ```bash
 docker pull piekvossen/a-proof-icf-classifier
 ```
-3. Run the pipeline with the `docker run` command. You need to pass the following arguments:
+3. Run the docker on the [example/input.csv](example/input.csv) file (it is already in the docker image and is given as the default argument to the [main.py](main.py) script):
+```bash
+docker run piekvossen/a-proof-icf-classifier
+```
+This will download all the required models from [https://huggingface.co/CLTL](https://huggingface.co/CLTL) and store them in the Docker's `.cache`, so that in subsequent runs cached models can be used. In total, 10 transformers models are downloaded, each between 500MB and 1GB.
+
+## Step 2: Running the pipeline on your data
+To run the pipeline on your own data (i.e. a csv file on your local machine), you need to mount the local directory where the file is stored to the docker container. This is done with the `-v` flag and then `<local_dir>:<docker_dir>`. In addition, you need to pass the following arguments:
 - `--in_csv`: path to the input csv file
 - `--text_col`: name of the text column in the csv
 - `--encoding` (optional): use if input csv is not utf-8
 
-For example -
+For example, if your csv file is in `C:\Users\User\Desktop`, it is called `myfile.csv` and the text is in the column `note`; you need to run the following command:
 ```bash
-docker run piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+docker run -v C:\Users\User\Desktop:/root piekvossen/a-proof-icf-classifier --in_csv /root/myfile.csv --text_col note
 ```
-
-Running the docker for the first time will download the models from huggingface:
-
-https://huggingface.co/CLTL
-
-In total, 10 transformer models will be downloaded, each between 500MB and 1GB. This will take a while. After downloading, the cached models will be used.
 
 # Cached models
 To save the cached models on the local file system, or use them in a different container in a follow-up run, mount the Huggingface cache dir to a local directory. For example:
