@@ -37,7 +37,6 @@ The input is a csv file with at least one column containing the text (one clinic
 The csv must follow the following specifications:
 - sep = ;
 - quotechar = "
-- encoding = utf-8
 - the first row is the header (column names)
 
 See example in [example/input.csv](example/input.csv).
