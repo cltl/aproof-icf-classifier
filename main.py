@@ -17,8 +17,9 @@ import warnings
 import pandas as pd
 from pathlib import Path
 from shutil import ReadError
-from src.text_processing import anonymize
-from src.icf_classifiers import predict_domains, predict_levels
+from src.text_processing import anonymize, split_sents
+from src.icf_classifiers import load_model, predict_domains, predict_levels
+from src import timer
 
 
 def add_level_predictions(
@@ -47,16 +48,21 @@ def add_level_predictions(
             print(f'There are no sentences for which {dom} was predicted.')
         else:
             print(f'Generating levels predictions for {dom}.')
-        lvl_model = f'CLTL/icf-levels-{dom.lower()}'
-        predictions = predict_levels(results['text'], 'roberta', lvl_model).rename(f"{dom}_lvl")
+        lvl_model = load_model(
+            'roberta',
+            f'CLTL/icf-levels-{dom.lower()}',
+            'clf',
+        )
+        predictions = predict_levels(results['text'], lvl_model).rename(f"{dom}_lvl")
         sents = sents.join(predictions)
     return sents
 
 
+@timer
 def main(
     in_csv,
     text_col,
-    encoding
+    encoding,
 ):
     """
     Read the `in_csv` file, process the text by row (anonymize, split to sentences), predict domains and levels per sentence, aggregate the results back to note-level, write the results to the output file.
@@ -64,9 +70,11 @@ def main(
     Parameters
     ----------
     in_csv: str
-        path to csv file with the text to process; the csv must follow the following specs: sep=';', quotechar='"', encoding='utf-8', first row is the header
+        path to csv file with the text to process; the csv must follow the following specs: sep=';', quotechar='"', first row is the header
     text_col: str
         name of the column containing the text
+    encoding: str
+        encoding of the csv file, e.g. utf-8
 
     Returns
     -------
@@ -96,9 +104,6 @@ def main(
     except:
         raise ReadError('The input csv file cannot be read. Please check that it conforms with the required specifications (separator, header, quotechar, encoding).')
 
-    if len(df) > 3000:
-        warnings.warn('The csv file contains more than 3,000 rows. This is not recommended since it might cause problems when generating predictions; consider splitting to several smaller files.')
-
     # remove rows containing NA values in text column
     if df[text_col].isna().sum() > 0:
         print(f'Number of rows in input data: {df.shape[0]}')
@@ -106,23 +111,21 @@ def main(
         df.dropna(axis=0, subset=[text_col], inplace=True)
         print(f'Rows after dropping NA values: {df.shape[0]}')
 
-    # anonymize
-    print(f'Anonymizing the text in "{text_col}" column. This might take a while.', flush=True)
-    nlp = spacy.load('nl_core_news_lg')
-    anonym_notes = df[text_col].apply(lambda i: anonymize(i, nlp)).rename('anonym_text')
+    if len(df) > 3000:
+        warnings.warn('The csv file contains more than 3,000 rows. This is not recommended since it might cause problems when generating predictions; consider splitting to several smaller files.')
 
-    # split to sentences
-    print(f'Splitting the text in "{text_col}" column to sentences. This might take a while.', flush=True)
-    to_sentence = lambda txt: [str(sent) for sent in list(nlp(txt).sents)]
-    sents = anonym_notes.apply(to_sentence).explode().rename('text').reset_index().rename(columns={'index': 'note_index'})
+    # text processing
+    nlp = spacy.load('nl_core_news_lg')
+    anonym_notes = anonymize(df[text_col], nlp)
+    sents = split_sents(anonym_notes, nlp)
 
     # predict domains
-    print('Generating domains predictions. This might take a while.', flush=True)
-    sents['predictions'] = predict_domains(
-        sents['text'],
+    icf_domains = load_model(
         'roberta',
         'CLTL/icf-domains',
+        'multi',
     )
+    sents['predictions'] = predict_domains(sents['text'], icf_domains)
 
     # predict levels
     print('Processing domains predictions.', flush=True)
@@ -154,5 +157,5 @@ if __name__ == '__main__':
     main(
         args.in_csv,
         args.text_col,
-        args.encoding
+        args.encoding,
     )
