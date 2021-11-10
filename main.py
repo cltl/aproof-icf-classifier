@@ -100,19 +100,17 @@ def main(
             encoding=encoding,
             low_memory=False,
         )
-        print(f'Input csv file ({in_csv}) is successfuly loaded!')
+        print(f'Input csv file ({in_csv}) is successfuly loaded! Number of records (rows): {df.shape[0]}')
     except:
         raise ReadError('The input csv file cannot be read. Please check that it conforms with the required specifications (separator, header, quotechar, encoding).')
 
     # remove rows containing NA values in text column
     if df[text_col].isna().sum() > 0:
+        print('Removing rows with no text:')
         print(f'Number of rows in input data: {df.shape[0]}')
         print(f'Rows containing NA in text column: {df[text_col].isna().sum()}')
         df.dropna(axis=0, subset=[text_col], inplace=True)
         print(f'Rows after dropping NA values: {df.shape[0]}')
-
-    if len(df) > 3000:
-        warnings.warn('The csv file contains more than 3,000 rows. This is not recommended since it might cause problems when generating predictions; consider splitting to several smaller files.')
 
     # text processing
     nlp = spacy.load('nl_core_news_lg')

@@ -59,4 +59,6 @@ def split_sents(notes, nlp):
     """
     print(f'Splitting the text in "{notes.name}" to sentences. This might take a while.', flush=True)
     to_sentence = lambda txt: [str(sent) for sent in nlp(txt).sents]
-    return notes.apply(to_sentence).explode().rename('text').reset_index().rename(columns={'index': 'note_index'})
+    sents = notes.apply(to_sentence).explode().rename('text').reset_index().rename(columns={'index': 'note_index'})
+    print(f'Done! Number of sentences: {sents.shape[0]}')
+    return sents
