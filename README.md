@@ -7,6 +7,7 @@ a-proof-icf-classifier
 4. [Machine Learning Pipeline](#machine-learning-pipeline)
 5. [How to use?](#how-to-use)
 6. [Cached models](#cached-models)
+7. [Runtime and File Size](#runtime-and-file-size)
 
 # Description
 This repository contains a machine learning pipeline that reads a clinical note in Dutch and assigns the functioning level of the patient based on the textual description.
@@ -92,3 +93,8 @@ To use the cached models in an environment without internet connection, set `TRA
 ```bash
 docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ -e TRANSFORMERS_OFFLINE=1 piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
 ```
+
+# Runtime and File Size
+The code runs faster if GPU is available on your machine; it is used automatically if it's available, no need to configure anything.
+
+On some machines, you might run into issues when generating domains predictions (this function is applied to each sentence in the input file). If this is the case, split the input into smaller batches.
