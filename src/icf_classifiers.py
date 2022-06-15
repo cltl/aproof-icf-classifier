@@ -94,6 +94,29 @@ def predict_domains(
 
 
 @timer
+def predict_domains_for_sentences(
+    sentences,
+    model,
+):
+    """
+    Apply a fine-tuned multi-label classification model to generate predictions.
+
+    Parameters
+    ----------
+    text: list of sentences
+    model: MultiLabelClassificationModel
+        fine-tuned multi-label classification model (simpletransformers)
+
+    Returns
+    -------
+    list is a multi-label prediction
+    """
+
+    print('Generating domains predictions. This might take a while.', flush=True)
+    predictions, output = model.predict(sentences)
+    return predictions
+
+@timer
 def predict_levels(
     text,
     model,
@@ -121,3 +144,28 @@ def predict_levels(
     _, raw_outputs = model.predict(to_predict)
     predictions = np.squeeze(raw_outputs)
     return pd.Series(predictions, index=text.index)
+
+
+@timer
+def predict_level_for_sentence(
+    sentence,
+    model,
+):
+    """
+    Apply a fine-tuned regression model to generate predictions.
+
+    Parameters
+    ----------
+    sentence: string
+    model: ClassificationModel
+        fine-tuned regression model (simpletransformers)
+
+    Returns
+    -------
+    list with float (if text is empty)
+    """
+
+    to_predict = [sentence]
+    _, raw_outputs = model.predict(to_predict)
+    predictions = np.squeeze(raw_outputs)
+    return predictions

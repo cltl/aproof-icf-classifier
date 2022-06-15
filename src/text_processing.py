@@ -62,3 +62,4 @@ def split_sents(notes, nlp):
     sents = notes.apply(to_sentence).explode().rename('text').reset_index().rename(columns={'index': 'note_index'})
     print(f'Done! Number of sentences: {sents.shape[0]}')
     return sents
+

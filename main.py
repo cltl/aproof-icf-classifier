@@ -128,7 +128,7 @@ def main(
     # predict levels
     print('Processing domains predictions.', flush=True)
     sents = add_level_predictions(sents, domains)
-
+    #print(sents.info())
     # aggregate to note-level
     note_predictions = sents.groupby('note_index')[levels].mean()
     df = df.merge(
