@@ -60,7 +60,7 @@ def add_level_predictions(
         level_predictions =[]
         for sentence, dom_prediction in zip(sentences, dom_predictions):
             if dom_prediction[i]==1:
-                print(f'Generating levels predictions for {dom}.')
+               # print(f'Generating levels predictions for {dom}.')
                 level = predict_level_for_sentence(sentence, LEVEL_MODELS[i])
                 level_predictions.append(level.item())
         level_predictions_per_domain.append(level_predictions)
@@ -73,7 +73,7 @@ def process_row(row:str,
                 icf_domains:[],
                 domains:[]):
     labeled_row = row ### remove the newline
-    print(row)
+   # print(row)
     fields = row.split(sep)
     text = fields[text_col_nr]
     anonym_note = anonymize_text(text, nlp)
@@ -81,9 +81,9 @@ def process_row(row:str,
     sents = to_sentence(anonym_note)
     dom_predictions = predict_domains_for_sentences(sents, icf_domains)
     # predict levels
-    print('Processing domains predictions.', flush=True)
+   # print('Processing domains predictions.', flush=True)
     sentence_level_predictions_per_domain = add_level_predictions(sents, dom_predictions, domains)
-    print(sentence_level_predictions_per_domain)
+   # print(sentence_level_predictions_per_domain)
     #aggregate to note level
     for prediction in sentence_level_predictions_per_domain:
         if prediction:
@@ -92,7 +92,7 @@ def process_row(row:str,
             labeled_row+=f'{sep}'
 
     labeled_row+="\n"
-    print(labeled_row)
+   # print(labeled_row)
     return labeled_row
 
 
@@ -120,7 +120,6 @@ def main(
     """
 
     domains=['ADM', 'ATT', 'BER', 'ENR', 'ETN', 'FAC', 'INS', 'MBW', 'STM']
-    #domains = ['ADM', 'ATT', 'STM']
 
     levels = [f"{domain}_lvl" for domain in domains]
 
