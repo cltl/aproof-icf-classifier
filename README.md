@@ -75,23 +75,24 @@ This will download all the required models from [https://huggingface.co/CLTL](ht
 To run the pipeline on your own data (i.e. a csv file on your local machine), you need to mount the local directory where the file is stored to the docker container. This is done with the `-v` flag and then `<local_dir>:<docker_dir>`. In addition, you need to pass the following arguments:
 - `--in_csv`: path to the input csv file
 - `--text_col`: name of the text column in the csv
+- `--sep`: separator character that separates the columns in the csv
 - `--encoding` (optional): use if input csv is not utf-8
 
-For example, if your csv file is in `C:\Users\User\Desktop`, it is called `myfile.csv` and the text is in the column `note`; you need to run the following command:
+For example, if your csv file is in `C:\Users\User\Desktop`, it is called `myfile.csv` and the text is in the column `note` where columns are seprated with ";" you need to run the following command:
 ```bash
-docker run -v C:\Users\User\Desktop:/root piekvossen/a-proof-icf-classifier --in_csv /root/myfile.csv --text_col note
+docker run -v C:\Users\User\Desktop:/root piekvossen/a-proof-icf-classifier --in_csv /root/myfile.csv --text_col note --sep ';'
 ```
 
 # Cached models
 To save the cached models on the local file system, or use them in a different container in a follow-up run, mount the Huggingface cache dir to a local directory. For example:
 ```bash
-docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text --sep ';'
 ```
 
 To use the cached models in an environment without internet connection, set `TRANSFORMERS_OFFLINE=1` as environment variable (see [Huggingface documentation](https://huggingface.co/transformers/installation.html#offline-mode)). For example:
 
 ```bash
-docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ -e TRANSFORMERS_OFFLINE=1 piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text
+docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ -e TRANSFORMERS_OFFLINE=1 piekvossen/a-proof-icf-classifier --in_csv example/input.csv --text_col text --sep ';'
 ```
 
 # Runtime and File Size
