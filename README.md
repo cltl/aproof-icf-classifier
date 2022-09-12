@@ -99,3 +99,15 @@ docker run -v <local_path_to_cache>:/root/.cache/huggingface/transformers/ -e TR
 The code runs faster if GPU is available on your machine; it is used automatically if it's available, no need to configure anything.
 
 On some machines, you might run into issues when generating domains predictions (this function is applied to each sentence in the input file). If this is the case, split the input into smaller batches.
+
+# Reference
+
+When using this repository please cite:
+
+'''@proceedings{kim-etal-lrec2022,
+author={Jenia Kim and Stella Verkijk and Edwin Geleijn and Marieke van der Leeden and Carel Meskers and Caroline Meskers and Sabina van der Veen and Piek Vossen and Guy Widdershoven},
+title={Modeling Dutch Medical Texts for Detecting Functional Categories and Levels of COVID-19 Patients},
+booktitle={Proceedings of the 13th Language Resources and Evaluation Conference, Marseille, June, 2022},
+year={2022}
+}'''
+
