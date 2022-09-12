@@ -10,7 +10,8 @@ a-proof-icf-classifier
 7. [Runtime and File Size](#runtime-and-file-size)
 
 # Description
-This repository contains a machine learning pipeline that reads a clinical note in Dutch and assigns the functioning level of the patient based on the textual description.
+This repository contains a machine learning pipeline that reads a clinical note in Dutch and assigns the functioning level of the patient based on the textual description. For a global overview of the A-PROOF project see our website: https://cltl.github.io/a-proof-project/
+
 
 We focus on 9 [WHO-ICF](https://www.who.int/standards/classifications/international-classification-of-functioning-disability-and-health) domains, which were chosen due to their relevance to recovery from COVID-19:
 
