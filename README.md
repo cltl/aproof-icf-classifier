@@ -104,7 +104,7 @@ On some machines, you might run into issues when generating domains predictions 
 
 The a-proof-icf-classifier is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See [MIT license](aproof-icf-classifier/LICENSE) for more details. 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See [MIT license](./LICENSE) for more details. 
 
 
 
