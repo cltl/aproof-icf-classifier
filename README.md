@@ -100,6 +100,14 @@ The code runs faster if GPU is available on your machine; it is used automatical
 
 On some machines, you might run into issues when generating domains predictions (this function is applied to each sentence in the input file). If this is the case, split the input into smaller batches.
 
+# License:
+
+The a-proof-icf-classifier is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See [MIT license](aproof-icf-classifier/LICENSE) for more details. 
+
+
+
 # Reference
 
 When using this repository please cite:
