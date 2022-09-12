@@ -104,7 +104,7 @@ On some machines, you might run into issues when generating domains predictions 
 
 When using this repository please cite:
 
-J. Kim, S. Verkijk, E. Geleijn, M. van der Leeden, C. Meskers, C. Meskers, S. van der Veen, P. Vossen, and G. Widdershoven, Modeling dutch medical texts for detecting functional categories and levels of covid-19 patients, 2022. 
+J. Kim, S. Verkijk, E. Geleijn, M. van der Leeden, C. Meskers, C. Meskers, S. van der Veen, P. Vossen, and G. Widdershoven, Modeling dutch medical texts for detecting functional categories and levels of covid-19 patients, 2022. In: Proceedings of the 13th Language Resources and Evaluation Conference, Marseille, June, 2022.
 
 ## Bibtext:
 
