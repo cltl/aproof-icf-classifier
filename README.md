@@ -104,6 +104,10 @@ On some machines, you might run into issues when generating domains predictions 
 
 When using this repository please cite:
 
+J. Kim, S. Verkijk, E. Geleijn, M. van der Leeden, C. Meskers, C. Meskers, S. van der Veen, P. Vossen, and G. Widdershoven, Modeling dutch medical texts for detecting functional categories and levels of covid-19 patients, 2022. 
+
+## Bibtext:
+
 @proceedings{kim-etal-lrec2022,
 author={Jenia Kim and Stella Verkijk and Edwin Geleijn and Marieke van der Leeden and Carel Meskers and Caroline Meskers and Sabina van der Veen and Piek Vossen and Guy Widdershoven},
 title={Modeling Dutch Medical Texts for Detecting Functional Categories and Levels of COVID-19 Patients},
