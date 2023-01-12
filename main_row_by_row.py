@@ -136,6 +136,8 @@ def main(
     in_csv_file = open(in_csv, 'r')
     ### read the headerline and check the header for the text column
     first_row = in_csv_file.readline().strip()
+    print(f'Header line: {first_row}')
+
     headers = first_row.split(sep)
     text_column_nr = -1
     for index, header in enumerate(headers):
