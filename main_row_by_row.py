@@ -130,26 +130,29 @@ def main(
 
     # read csv
     print(f'Loading input csv file: {in_csv}')
+    print(f'Separator: {sep}')
+    print(f'Text header: {text_col}')
+
     in_csv_file = open(in_csv, 'r')
     ### read the headerline and check the header for the text column
     first_row = in_csv_file.readline().strip()
     headers = first_row.split(sep)
     text_column_nr = -1
     for index, header in enumerate(headers):
-        print(header, index)
+        print('Header', header, index)
         if header.strip()==text_col:
             text_column_nr = index
             break
 
     if text_column_nr ==-1:
-        print(f'Could not find the text column "{text_col}" in header line: "{row}". Aborting.')
+        print(f'Could not find the text column "{text_col}" in header line: "{first_row}". Aborting.')
         return
 
     # text processing
     print('Loading spacy model:nl_core_news_lg')
     nlp = spacy.load('nl_core_news_lg')
     print('Loading ICF classifiers')
-    # predict domains
+    # predict domain
     icf_domains = load_model(
         'roberta',
         'CLTL/icf-domains',
